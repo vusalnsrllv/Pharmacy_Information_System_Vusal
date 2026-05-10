@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>АптекаПлюс — Информационно-справочная система</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f6f2;
+    --bg2: #eeeae0;
+    --white: #ffffff;
+    --green: #2d6a4f;
+    --green2: #40916c;
+    --green3: #74c69d;
+    --green-light: #d8f3dc;
+    --accent: #e76f51;
+    --text: #1a1a2e;
+    --text2: #4a4a6a;
+    --text3: #8888aa;
+    --border: #ddd8cc;
+    --shadow: 0 4px 24px rgba(45,106,79,0.10);
+    --shadow2: 0 8px 40px rgba(45,106,79,0.16);
+    --radius: 18px;
+    --radius-sm: 10px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ========== NAVBAR ========== */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 48px;
+    height: 72px;
+    background: rgba(247,246,242,0.88);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--border);
+    transition: box-shadow 0.3s;
+  }
+  nav.scrolled { box-shadow: var(--shadow); }
+
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem; font-weight: 700;
+    color: var(--green); cursor: pointer; text-decoration: none;
+  }
+  .logo-icon {
+    width: 38px; height: 38px;
+    background: var(--green);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo-icon svg { width: 22px; height: 22px; fill: white; }
+
+  .nav-links { display: flex; gap: 8px; align-items: center; }
+  .nav-links a {
+    font-size: 0.92rem; font-weight: 500;
+    color: var(--text2);
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer; text-decoration: none;
+    transition: all 0.2s;
+  }
+  .nav-links a:hover, .nav-links a.active {
+    background: var(--green-light);
+    color: var(--green);
+  }
+  .nav-cta {
+    background: var(--green) !important;
+    color: white !important;
+    padding: 9px 22px !important;
+  }
+  .nav-cta:hover { background: var(--green2) !important; }
+
+  /* ========== PAGES ========== */
+  .page { display: none; min-height: 100vh; padding-top: 72px; }
+  .page.active { display: block; }
+
+  /* ========== HERO ========== */
+  .hero {
+    min-height: calc(100vh - 72px);
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: flex-start;
+    padding: 80px 48px 60px;
+    position: relative; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background: radial-gradient(ellipse 80% 60% at 70% 40%, #b7e4c7 0%, transparent 70%),
+                radial-gradient(ellipse 60% 40% at 20% 80%, #d8f3dc 0%, transparent 60%);
+  }
+  .hero-badge {
+    position: relative; z-index: 1;
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--green-light);
+    color: var(--green);
+    font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em;
+    padding: 7px 16px; border-radius: 100px;
+    margin-bottom: 28px;
+    border: 1px solid rgba(45,106,79,0.15);
+  }
+  .hero-badge span { width: 7px; height: 7px; background: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  .hero h1 {
+    position: relative; z-index: 1;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.8rem, 5vw, 4.2rem);
+    font-weight: 700; line-height: 1.13;
+    color: var(--text);
+    max-width: 680px; margin-bottom: 24px;
+  }
+  .hero h1 em { color: var(--green); font-style: normal; }
+
+  .hero p {
+    position: relative; z-index: 1;
+    font-size: 1.1rem; color: var(--text2); font-weight: 400;
+    max-width: 520px; line-height: 1.7; margin-bottom: 44px;
+  }
+  .hero-btns { position: relative; z-index: 1; display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--green); color: white;
+    padding: 14px 32px; border-radius: 12px;
+    font-size: 1rem; font-weight: 600;
+    border: none; cursor: pointer;
+    transition: all 0.2s; box-shadow: 0 4px 16px rgba(45,106,79,0.25);
+  }
+  .btn-primary:hover { background: var(--green2); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(45,106,79,0.3); }
+  .btn-secondary {
+    background: transparent; color: var(--green);
+    padding: 14px 32px; border-radius: 12px;
+    font-size: 1rem; font-weight: 600;
+    border: 2px solid var(--green); cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover { background: var(--green-light); }
+
+  .hero-stats {
+    position: relative; z-index: 1;
+    display: flex; gap: 48px; margin-top: 64px; flex-wrap: wrap;
+  }
+  .stat-item { }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 700; color: var(--green);
+  }
+  .stat-label { font-size: 0.85rem; color: var(--text3); font-weight: 500; margin-top: 2px; }
+
+  .hero-card {
+    position: absolute; right: 80px; top: 50%;
+    transform: translateY(-50%);
+    background: white;
+    border-radius: 20px;
+    padding: 24px;
+    width: 280px;
+    box-shadow: var(--shadow2);
+    z-index: 1;
+    animation: floatCard 4s ease-in-out infinite;
+  }
+  @keyframes floatCard { 0%,100%{transform:translateY(-50%) translateY(0)} 50%{transform:translateY(-50%) translateY(-12px)} }
+  .hero-card-title { font-size: 0.78rem; font-weight: 600; color: var(--text3); letter-spacing: 0.06em; margin-bottom: 12px; }
+  .hero-card-drug { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .hero-card-drug:last-of-type { border-bottom: none; }
+  .drug-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--green3); flex-shrink: 0; }
+  .drug-dot.orange { background: var(--accent); }
+  .drug-dot.yellow { background: #f4a261; }
+  .drug-info-name { font-size: 0.88rem; font-weight: 600; color: var(--text); }
+  .drug-info-avail { font-size: 0.76rem; color: var(--text3); }
+  .drug-price { margin-left: auto; font-size: 0.88rem; font-weight: 700; color: var(--green); }
+
+  /* ========== SECTIONS ========== */
+  .section { padding: 80px 48px; }
+  .section-tag {
+    display: inline-block;
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em;
+    color: var(--green); text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 3.5vw, 2.8rem);
+    font-weight: 700; line-height: 1.2;
+    color: var(--text); margin-bottom: 16px;
+  }
+  .section-sub { font-size: 1.05rem; color: var(--text2); max-width: 560px; line-height: 1.7; margin-bottom: 48px; }
+
+  /* ========== FEATURES GRID ========== */
+  .features-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px; margin-top: 48px;
+  }
+  .feature-card {
+    background: white; border-radius: var(--radius);
+    padding: 32px; border: 1px solid var(--border);
+    transition: all 0.3s;
+  }
+  .feature-card:hover { transform: translateY(-4px); box-shadow: var(--shadow2); border-color: var(--green3); }
+  .feature-icon {
+    width: 52px; height: 52px;
+    background: var(--green-light);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px; font-size: 1.5rem;
+  }
+  .feature-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; color: var(--text); }
+  .feature-card p { font-size: 0.9rem; color: var(--text2); line-height: 1.65; }
+
+  /* ========== SEARCH PAGE ========== */
+  .search-header {
+    background: linear-gradient(135deg, var(--green) 0%, var(--green2) 100%);
+    padding: 60px 48px 50px;
+    color: white;
+  }
+  .search-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem; font-weight: 700; margin-bottom: 10px;
+  }
+  .search-header p { font-size: 1rem; opacity: 0.85; margin-bottom: 32px; }
+
+  .search-box-wrap {
+    display: flex; gap: 12px; max-width: 680px;
+  }
+  .search-input {
+    flex: 1;
+    padding: 16px 22px;
+    border-radius: 12px;
+    border: none;
+    font-size: 1rem;
+    font-family: 'DM Sans', sans-serif;
+    background: white;
+    color: var(--text);
+    outline: none;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+  .search-input::placeholder { color: var(--text3); }
+  .search-btn {
+    padding: 16px 28px;
+    background: var(--accent);
+    color: white; border: none;
+    border-radius: 12px;
+    font-size: 1rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .search-btn:hover { background: #cf5c3a; transform: translateY(-1px); }
+
+  .filter-tags { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+  .filter-tag {
+    padding: 6px 16px;
+    border-radius: 100px;
+    background: rgba(255,255,255,0.2);
+    color: white; font-size: 0.82rem; font-weight: 500;
+    cursor: pointer; border: 1px solid rgba(255,255,255,0.3);
+    transition: all 0.2s;
+  }
+  .filter-tag:hover, .filter-tag.active { background: white; color: var(--green); }
+
+  .drugs-grid {
+    padding: 40px 48px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  .drug-card {
+    background: white; border-radius: var(--radius);
+    padding: 24px; border: 1px solid var(--border);
+    cursor: pointer; transition: all 0.25s;
+  }
+  .drug-card:hover { transform: translateY(-3px); box-shadow: var(--shadow2); border-color: var(--green3); }
+  .drug-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+  .drug-name { font-size: 1.05rem; font-weight: 700; color: var(--text); }
+  .drug-category {
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em;
+    background: var(--green-light); color: var(--green);
+    padding: 4px 10px; border-radius: 100px;
+  }
+  .drug-desc { font-size: 0.87rem; color: var(--text2); line-height: 1.6; margin-bottom: 16px; }
+  .drug-card-bottom { display: flex; justify-content: space-between; align-items: center; }
+  .drug-price-big { font-size: 1.15rem; font-weight: 700; color: var(--green); }
+  .avail-badge {
+    font-size: 0.76rem; font-weight: 600;
+    padding: 4px 12px; border-radius: 100px;
+  }
+  .avail-badge.yes { background: #d1fae5; color: #065f46; }
+  .avail-badge.no { background: #fee2e2; color: #991b1b; }
+  .avail-badge.few { background: #fef3c7; color: #92400e; }
+
+  /* ========== MODAL ========== */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 2000;
+    background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+    display: none; align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: white; border-radius: 24px;
+    padding: 40px; max-width: 560px; width: 100%;
+    max-height: 85vh; overflow-y: auto;
+    position: relative;
+    animation: modalIn 0.3s ease;
+  }
+  @keyframes modalIn { from{opacity:0;transform:scale(0.95) translateY(20px)} to{opacity:1;transform:scale(1) translateY(0)} }
+  .modal-close {
+    position: absolute; top: 20px; right: 20px;
+    width: 36px; height: 36px;
+    background: var(--bg); border: none; border-radius: 50%;
+    cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center;
+    color: var(--text2); transition: all 0.2s;
+  }
+  .modal-close:hover { background: #fee2e2; color: #991b1b; }
+  .modal-drug-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem; font-weight: 700; color: var(--text); margin-bottom: 6px;
+  }
+  .modal-cat { color: var(--green); font-size: 0.85rem; font-weight: 600; margin-bottom: 20px; }
+  .modal-section-title { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; color: var(--text3); text-transform: uppercase; margin: 20px 0 8px; }
+  .modal-text { font-size: 0.92rem; color: var(--text2); line-height: 1.7; }
+  .modal-props { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
+  .modal-prop { background: var(--bg); border-radius: 10px; padding: 12px 16px; }
+  .modal-prop-label { font-size: 0.72rem; color: var(--text3); font-weight: 600; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .modal-prop-value { font-size: 0.95rem; color: var(--text); font-weight: 600; }
+  .modal-price-section { display: flex; align-items: center; justify-content: space-between; margin-top: 24px; padding: 20px; background: var(--green-light); border-radius: 14px; }
+  .modal-price { font-size: 1.8rem; font-weight: 700; color: var(--green); font-family: 'Playfair Display', serif; }
+  .modal-avail { font-size: 0.88rem; font-weight: 600; }
+
+  /* ========== PHARMACIES PAGE ========== */
+  .pharmacies-layout {
+    display: grid; grid-template-columns: 380px 1fr; min-height: calc(100vh - 72px);
+  }
+  .pharmacies-list {
+    padding: 32px 24px; overflow-y: auto;
+    max-height: calc(100vh - 72px);
+    border-right: 1px solid var(--border);
+    background: white;
+  }
+  .pharmacies-list h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem; font-weight: 700; margin-bottom: 20px;
+  }
+  .pharm-search {
+    width: 100%; padding: 12px 16px;
+    border: 1.5px solid var(--border); border-radius: 10px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.92rem;
+    outline: none; margin-bottom: 20px;
+    transition: border-color 0.2s;
+  }
+  .pharm-search:focus { border-color: var(--green); }
+  .pharm-card {
+    padding: 18px; border-radius: 14px; border: 1.5px solid var(--border);
+    margin-bottom: 12px; cursor: pointer; transition: all 0.2s;
+    background: var(--bg);
+  }
+  .pharm-card:hover, .pharm-card.selected { border-color: var(--green); background: var(--green-light); }
+  .pharm-card-name { font-weight: 700; font-size: 0.98rem; color: var(--text); margin-bottom: 5px; }
+  .pharm-card-addr { font-size: 0.82rem; color: var(--text2); margin-bottom: 8px; }
+  .pharm-card-meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .open-badge { font-size: 0.73rem; font-weight: 600; padding: 3px 10px; border-radius: 100px; background: #d1fae5; color: #065f46; }
+  .closed-badge { font-size: 0.73rem; font-weight: 600; padding: 3px 10px; border-radius: 100px; background: #fee2e2; color: #991b1b; }
+  .pharm-rating { font-size: 0.8rem; color: var(--text2); }
+
+  .map-area {
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .map-placeholder {
+    text-align: center; z-index: 1; padding: 40px;
+  }
+  .map-icon { font-size: 4rem; margin-bottom: 16px; }
+  .map-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; color: var(--green); margin-bottom: 10px; }
+  .map-sub { font-size: 0.95rem; color: var(--text2); margin-bottom: 24px; }
+
+  /* Fake map grid */
+  .map-grid {
+    position: absolute; inset: 0;
+    opacity: 0.15;
+    background-image: linear-gradient(var(--green) 1px, transparent 1px), linear-gradient(90deg, var(--green) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .map-pin {
+    position: absolute; font-size: 2rem; cursor: pointer;
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.2));
+    transition: transform 0.2s; z-index: 2;
+  }
+  .map-pin:hover { transform: scale(1.2) translateY(-4px); }
+
+  .pharm-detail-panel {
+    position: absolute; bottom: 24px; right: 24px; z-index: 10;
+    background: white; border-radius: 18px; padding: 24px;
+    width: 300px; box-shadow: var(--shadow2);
+    display: none;
+  }
+  .pharm-detail-panel.visible { display: block; animation: modalIn 0.3s ease; }
+  .pharm-detail-name { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; margin-bottom: 6px; }
+  .pharm-detail-addr { font-size: 0.85rem; color: var(--text2); margin-bottom: 14px; }
+  .pharm-detail-row { display: flex; justify-content: space-between; font-size: 0.85rem; padding: 6px 0; border-bottom: 1px solid var(--border); }
+  .pharm-detail-row:last-of-type { border: none; }
+  .pharm-detail-label { color: var(--text3); font-weight: 500; }
+  .pharm-detail-value { color: var(--text); font-weight: 600; }
+
+  /* ========== CONTACT / INFO PAGE ========== */
+  .contact-layout { display: grid; grid-template-columns: 1fr 1fr; min-height: calc(100vh - 72px); }
+  .contact-left {
+    padding: 80px 60px;
+    background: var(--green);
+    color: white; display: flex; flex-direction: column; justify-content: center;
+  }
+  .contact-left h2 { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; margin-bottom: 16px; }
+  .contact-left p { font-size: 1rem; opacity: 0.85; line-height: 1.7; margin-bottom: 40px; }
+  .contact-info-item { display: flex; gap: 16px; margin-bottom: 24px; align-items: flex-start; }
+  .contact-info-icon { font-size: 1.3rem; margin-top: 2px; }
+  .contact-info-text { }
+  .contact-info-label { font-size: 0.78rem; opacity: 0.7; font-weight: 600; letter-spacing: 0.07em; margin-bottom: 3px; }
+  .contact-info-value { font-size: 0.95rem; font-weight: 600; }
+
+  .contact-right { padding: 80px 60px; display: flex; flex-direction: column; justify-content: center; background: var(--bg); }
+  .contact-right h3 { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; margin-bottom: 32px; color: var(--text); }
+
+  .form-group { margin-bottom: 20px; }
+  .form-label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--text2); margin-bottom: 8px; letter-spacing: 0.04em; }
+  .form-input, .form-select, .form-textarea {
+    width: 100%; padding: 13px 18px;
+    border: 1.5px solid var(--border); border-radius: 10px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.95rem;
+    color: var(--text); background: white; outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(45,106,79,0.08); }
+  .form-textarea { resize: vertical; min-height: 120px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-submit {
+    width: 100%; padding: 15px;
+    background: var(--green); color: white;
+    border: none; border-radius: 12px;
+    font-size: 1rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+    margin-top: 8px;
+  }
+  .form-submit:hover { background: var(--green2); transform: translateY(-1px); }
+
+  .success-toast {
+    position: fixed; bottom: 32px; right: 32px; z-index: 3000;
+    background: var(--green); color: white;
+    padding: 16px 24px; border-radius: 14px;
+    font-size: 0.95rem; font-weight: 600;
+    box-shadow: var(--shadow2);
+    display: none; align-items: center; gap: 10px;
+    animation: slideUp 0.3s ease;
+  }
+  @keyframes slideUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  .success-toast.show { display: flex; }
+
+  /* FAQ */
+  .faq-section { padding: 80px 48px; background: white; }
+  .faq-item {
+    border: 1.5px solid var(--border); border-radius: 14px;
+    margin-bottom: 12px; overflow: hidden; transition: border-color 0.2s;
+  }
+  .faq-item.open { border-color: var(--green); }
+  .faq-question {
+    padding: 20px 24px; display: flex; justify-content: space-between; align-items: center;
+    cursor: pointer; font-weight: 600; font-size: 0.97rem; color: var(--text);
+    transition: background 0.2s;
+  }
+  .faq-question:hover { background: var(--bg); }
+  .faq-item.open .faq-question { background: var(--green-light); color: var(--green); }
+  .faq-arrow { transition: transform 0.3s; font-size: 0.8rem; color: var(--text3); }
+  .faq-item.open .faq-arrow { transform: rotate(180deg); }
+  .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s; }
+  .faq-item.open .faq-answer { max-height: 300px; }
+  .faq-answer-inner { padding: 0 24px 20px; font-size: 0.9rem; color: var(--text2); line-height: 1.7; }
+
+  /* ========== FOOTER ========== */
+  footer {
+    background: var(--text); color: white;
+    padding: 60px 48px 32px;
+  }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+  .footer-brand .logo { color: white; margin-bottom: 14px; }
+  .footer-brand p { font-size: 0.87rem; opacity: 0.6; line-height: 1.7; max-width: 280px; }
+  .footer-col h4 { font-size: 0.82rem; font-weight: 700; letter-spacing: 0.08em; opacity: 0.5; text-transform: uppercase; margin-bottom: 16px; }
+  .footer-col a { display: block; font-size: 0.9rem; opacity: 0.75; margin-bottom: 10px; cursor: pointer; transition: opacity 0.2s; text-decoration: none; color: white; }
+  .footer-col a:hover { opacity: 1; }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 28px; display: flex; justify-content: space-between; align-items: center; }
+  .footer-bottom p { font-size: 0.83rem; opacity: 0.45; }
+
+  /* ========== RESPONSIVE ========== */
+  @media (max-width: 1024px) {
+    .hero-card { display: none; }
+    .pharmacies-layout { grid-template-columns: 1fr; }
+    .map-area { min-height: 400px; }
+    .contact-layout { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .hero { padding: 60px 24px 40px; }
+    .section { padding: 60px 24px; }
+    .drugs-grid { padding: 24px; }
+    .search-header { padding: 40px 24px; }
+    .contact-left, .contact-right { padding: 40px 24px; }
+    .faq-section { padding: 60px 24px; }
+    footer { padding: 40px 24px 24px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
+    .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+    .form-row { grid-template-columns: 1fr; }
+    .modal { padding: 28px 20px; }
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--green3); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a class="logo" onclick="showPage('home')">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H8v-2h4v2zm4-4H8v-2h8v2zm0-4H8V7h8v2z"/></svg>
+    </div>
+    АптекаПлюс
+  </a>
+  <div class="nav-links">
+    <a onclick="showPage('home')" id="nav-home" class="active">Главная</a>
+    <a onclick="showPage('catalog')" id="nav-catalog">Каталог</a>
+    <a onclick="showPage('pharmacies')" id="nav-pharmacies">Аптеки</a>
+    <a onclick="showPage('contact')" id="nav-contact" class="nav-cta">Информация</a>
+  </div>
+</nav>
+
+<!-- ===================== PAGE: HOME ===================== -->
+<div class="page active" id="page-home">
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-badge"><span></span> Онлайн-справочная система</div>
+    <h1>Ваша цифровая <em>аптека</em> в интернете</h1>
+    <p>Находите нужные лекарства, проверяйте наличие в аптеках вашего города и получайте подробную информацию о препаратах — всё в одном месте.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="showPage('catalog')">Найти препарат</button>
+      <button class="btn-secondary" onclick="showPage('pharmacies')">Найти аптеку</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item"><div class="stat-num">2 400+</div><div class="stat-label">Препаратов в базе</div></div>
+      <div class="stat-item"><div class="stat-num">180+</div><div class="stat-label">Аптек города</div></div>
+      <div class="stat-item"><div class="stat-num">24/7</div><div class="stat-label">Доступ к информации</div></div>
+    </div>
+
+    <div class="hero-card">
+      <div class="hero-card-title">НАЛИЧИЕ СЕГОДНЯ</div>
+      <div class="hero-card-drug">
+        <div class="drug-dot"></div>
+        <div class="drug-info"><div class="drug-info-name">Парацетамол 500мг</div><div class="drug-info-avail">✓ В наличии · 12 аптек</div></div>
+        <div class="drug-price">42 ₼</div>
+      </div>
+      <div class="hero-card-drug">
+        <div class="drug-dot orange"></div>
+        <div class="drug-info"><div class="drug-info-name">Амоксициллин</div><div class="drug-info-avail">⚠ Мало · 3 аптеки</div></div>
+        <div class="drug-price">89 ₼</div>
+      </div>
+      <div class="hero-card-drug">
+        <div class="drug-dot yellow"></div>
+        <div class="drug-info"><div class="drug-info-name">Ибупрофен 400мг</div><div class="drug-info-avail">✓ В наличии · 20 аптек</div></div>
+        <div class="drug-price">35 ₼</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section" style="background:white;">
+    <div class="section-tag">Возможности системы</div>
+    <h2 class="section-title">Всё что вам нужно знать<br>о лекарствах</h2>
+    <p class="section-sub">Наша информационно-справочная система предоставляет полные данные о препаратах, их наличии и ценах в аптеках.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🔍</div>
+        <h3>Поиск препаратов</h3>
+        <p>Быстрый поиск по названию, действующему веществу, показаниям или фармакологической группе. Умные подсказки помогут найти нужное мгновенно.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📍</div>
+        <h3>Карта аптек</h3>
+        <p>Интерактивная карта всех аптек города с режимом работы, контактами и актуальной информацией о наличии препаратов в каждой точке.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💊</div>
+        <h3>Подробные инструкции</h3>
+        <p>Полная информация о составе, показаниях, противопоказаниях, дозировке и побочных эффектах каждого препарата.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💰</div>
+        <h3>Сравнение цен</h3>
+        <p>Сравнивайте цены на один и тот же препарат в разных аптеках и находите лучшие предложения в вашем районе.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔄</div>
+        <h3>Аналоги препаратов</h3>
+        <p>Если нужного лекарства нет в наличии, система предложит аналоги с аналогичным действующим веществом или терапевтическим эффектом.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📋</div>
+        <h3>Рецептурный учёт</h3>
+        <p>Чёткое разграничение между рецептурными и безрецептурными препаратами. Информация о необходимых документах для приобретения.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo">
+          <div class="logo-icon">
+            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H8v-2h4v2zm4-4H8v-2h8v2zm0-4H8V7h8v2z"/></svg>
+          </div>
+          АптекаПлюс
+        </div>
+        <p>Информационно-справочная система для аптек. Актуальные данные о препаратах, ценах и наличии в аптеках вашего города.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Навигация</h4>
+        <a onclick="showPage('home')">Главная</a>
+        <a onclick="showPage('catalog')">Каталог</a>
+        <a onclick="showPage('pharmacies')">Аптеки</a>
+        <a onclick="showPage('contact')">Информация</a>
+      </div>
+      <div class="footer-col">
+        <h4>Категории</h4>
+        <a>Антибиотики</a>
+        <a>Анальгетики</a>
+        <a>Витамины</a>
+        <a>Сердечные</a>
+      </div>
+      <div class="footer-col">
+        <h4>Контакты</h4>
+        <a>📞 +994 12 000-00-00</a>
+        <a>✉ info@aptekaplus.az</a>
+        <a>📍 г. Баку</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024 АптекаПлюс. Информация носит справочный характер — проконсультируйтесь с врачом.</p>
+      <p>Курсовая работа · Информационно-справочная система</p>
+    </div>
+  </footer>
+</div>
+
+<!-- ===================== PAGE: CATALOG ===================== -->
+<div class="page" id="page-catalog">
+  <div class="search-header">
+    <h1>Каталог препаратов</h1>
+    <p>Найдите нужное лекарство по названию, симптомам или действующему веществу</p>
+    <div class="search-box-wrap">
+      <input class="search-input" id="drugSearch" type="text" placeholder="Например: Парацетамол, Ибупрофен, Амоксициллин..." oninput="filterDrugs()">
+      <button class="search-btn" onclick="filterDrugs()">🔍 Найти</button>
+    </div>
+    <div class="filter-tags">
+      <div class="filter-tag active" onclick="setCategory(this,'Все')">Все</div>
+      <div class="filter-tag" onclick="setCategory(this,'Анальгетики')">Анальгетики</div>
+      <div class="filter-tag" onclick="setCategory(this,'Антибиотики')">Антибиотики</div>
+      <div class="filter-tag" onclick="setCategory(this,'Витамины')">Витамины</div>
+      <div class="filter-tag" onclick="setCategory(this,'Сердечные')">Сердечные</div>
+      <div class="filter-tag" onclick="setCategory(this,'Желудочные')">Желудочные</div>
+      <div class="filter-tag" onclick="setCategory(this,'Антигистаминные')">Антигистаминные</div>
+    </div>
+  </div>
+  <div class="drugs-grid" id="drugsGrid"></div>
+
+  <footer style="margin-top:0;">
+    <div class="footer-bottom" style="border-top:none; padding-top:0;">
+      <p>© 2024 АптекаПлюс</p>
+    </div>
+  </footer>
+</div>
+
+<!-- ===================== PAGE: PHARMACIES ===================== -->
+<div class="page" id="page-pharmacies">
+  <div class="pharmacies-layout">
+    <div class="pharmacies-list">
+      <h2>Аптеки Баку</h2>
+      <input class="pharm-search" type="text" placeholder="🔍  Поиск по названию или адресу..." oninput="filterPharms(this.value)">
+      <div id="pharmList"></div>
+    </div>
+    <div class="map-area" id="mapArea">
+      <div class="map-grid"></div>
+      <div id="mapPins"></div>
+      <div class="map-placeholder">
+        <div class="map-icon">🗺️</div>
+        <div class="map-title">Карта аптек</div>
+        <div class="map-sub">Выберите аптеку из списка слева<br>для просмотра на карте</div>
+        <button class="btn-primary" onclick="selectPharm(0)">Показать ближайшую</button>
+      </div>
+      <div class="pharm-detail-panel" id="pharmDetail"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE: CONTACT / INFO ===================== -->
+<div class="page" id="page-contact">
+  <div class="contact-layout">
+    <div class="contact-left">
+      <h2>Информация о системе</h2>
+      <p>АптекаПлюс — современная онлайн информационно-справочная система для аптек. Мы предоставляем актуальные данные о лекарственных препаратах и аптеках.</p>
+      <div class="contact-info-item">
+        <div class="contact-info-icon">📞</div>
+        <div class="contact-info-text">
+          <div class="contact-info-label">ТЕЛЕФОН</div>
+          <div class="contact-info-value">+994 12 000-00-00</div>
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <div class="contact-info-icon">✉️</div>
+        <div class="contact-info-text">
+          <div class="contact-info-label">ЭЛЕКТРОННАЯ ПОЧТА</div>
+          <div class="contact-info-value">info@aptekaplus.az</div>
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <div class="contact-info-icon">📍</div>
+        <div class="contact-info-text">
+          <div class="contact-info-label">ГОРОД</div>
+          <div class="contact-info-value">Баку, Азербайджан</div>
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <div class="contact-info-icon">🕐</div>
+        <div class="contact-info-text">
+          <div class="contact-info-label">ПОДДЕРЖКА</div>
+          <div class="contact-info-value">Ежедневно, 08:00 – 22:00</div>
+        </div>
+      </div>
+    </div>
+    <div class="contact-right">
+      <h3>Обратная связь</h3>
+      <div class="form-group form-row">
+        <div>
+          <label class="form-label">Имя</label>
+          <input class="form-input" type="text" placeholder="Ваше имя">
+        </div>
+        <div>
+          <label class="form-label">Телефон</label>
+          <input class="form-input" type="text" placeholder="+994 __-___-__-__">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Электронная почта</label>
+        <input class="form-input" type="email" placeholder="example@mail.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Тема обращения</label>
+        <select class="form-select">
+          <option>Нет нужного препарата в базе</option>
+          <option>Неверная информация о лекарстве</option>
+          <option>Добавление аптеки</option>
+          <option>Техническая проблема</option>
+          <option>Другое</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Сообщение</label>
+        <textarea class="form-textarea" placeholder="Опишите ваш вопрос или предложение..."></textarea>
+      </div>
+      <button class="form-submit" onclick="submitForm()">Отправить сообщение →</button>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <div class="section-tag">Часто задаваемые вопросы</div>
+    <h2 class="section-title" style="margin-bottom:32px;">FAQ</h2>
+    <div id="faqList"></div>
+  </div>
+
+  <footer>
+    <div class="footer-bottom" style="border-top:none; padding-top:0;">
+      <p>© 2024 АптекаПлюс · Информационно-справочная система для аптек</p>
+    </div>
+  </footer>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modal"></div>
+</div>
+
+<!-- TOAST -->
+<div class="success-toast" id="toast">✅ Сообщение отправлено!</div>
+
+<script>
+// ========== DATA ==========
+const drugs = [
+  { name:"Парацетамол 500мг", cat:"Анальгетики", price:"42 ₼", avail:"yes", availText:"В наличии",
+    desc:"Жаропонижающее и обезболивающее средство для взрослых и детей.", maker:"Bayer", form:"Таблетки", rx:false,
+    indications:"Головная боль, зубная боль, невралгия, боли в мышцах, повышенная температура при ОРВИ и гриппе.",
+    contra:"Повышенная чувствительность к парацетамолу, тяжёлые нарушения функции печени и почек.",
+    dosage:"Взрослые и дети старше 12 лет: 500–1000 мг 3–4 раза в сутки. Интервал между приёмами не менее 4 часов.",
+    side:"Редко: аллергические реакции, нарушения функции печени при длительном применении." },
+  { name:"Ибупрофен 400мг", cat:"Анальгетики", price:"35 ₼", avail:"yes", availText:"В наличии",
+    desc:"Нестероидный противовоспалительный препарат широкого спектра действия.", maker:"Gedeon Richter", form:"Таблетки", rx:false,
+    indications:"Ревматоидный артрит, остеоартроз, головная и зубная боль, мигрень, болевой синдром при воспалениях.",
+    contra:"Язвенная болезнь желудка, тяжёлая сердечная недостаточность, беременность (III триместр).",
+    dosage:"400–600 мг 3 раза в сутки после еды. Максимальная суточная доза — 2400 мг.",
+    side:"Боли в эпигастрии, тошнота, редко — аллергические реакции." },
+  { name:"Амоксициллин 500мг", cat:"Антибиотики", price:"89 ₼", avail:"few", availText:"Мало",
+    desc:"Антибиотик широкого спектра действия из группы пенициллинов.", maker:"Sandoz", form:"Капсулы", rx:true,
+    indications:"Инфекции дыхательных путей, ЛОР-органов, мочевыводящих путей, кожи и мягких тканей.",
+    contra:"Аллергия на пенициллины и цефалоспорины, инфекционный мононуклеоз.",
+    dosage:"500 мг 3 раза в сутки или 875 мг 2 раза в сутки в течение 5–10 дней.",
+    side:"Диарея, тошнота, кожная сыпь, крапивница." },
+  { name:"Омепразол 20мг", cat:"Желудочные", price:"28 ₼", avail:"yes", availText:"В наличии",
+    desc:"Ингибитор протонного насоса для лечения заболеваний желудка.", maker:"AstraZeneca", form:"Капсулы", rx:false,
+    indications:"Язвенная болезнь желудка и двенадцатиперстной кишки, ГЭРБ, синдром Золлингера-Эллисона.",
+    contra:"Совместный приём с нелфинавиром, повышенная чувствительность к компонентам.",
+    dosage:"20–40 мг 1 раз в сутки утром, натощак, курс 4–8 недель.",
+    side:"Головная боль, диарея, тошнота, запор — редко." },
+  { name:"Лоратадин 10мг", cat:"Антигистаминные", price:"22 ₼", avail:"yes", availText:"В наличии",
+    desc:"Антигистаминный препарат второго поколения без седативного эффекта.", maker:"Krka", form:"Таблетки", rx:false,
+    indications:"Аллергический ринит, крапивница, аллергический конъюнктивит, зуд кожи аллергического происхождения.",
+    contra:"Повышенная чувствительность к лоратадину, беременность (I триместр).",
+    dosage:"10 мг 1 раз в сутки (1 таблетка). Детям 2–12 лет: по 5 мг 1 раз в сутки.",
+    side:"Сонливость, сухость во рту, головная боль — редко." },
+  { name:"Витамин D3 1000 МЕ", cat:"Витамины", price:"55 ₼", avail:"yes", availText:"В наличии",
+    desc:"Препарат витамина D для профилактики и лечения его дефицита.", maker:"Solgar", form:"Капсулы", rx:false,
+    indications:"Профилактика и лечение дефицита витамина D, рахита, остеопороза, поддержка иммунитета.",
+    contra:"Гиперкальциемия, гиперкальциурия, мочекаменная болезнь.",
+    dosage:"1000–2000 МЕ в сутки во время еды, содержащей жиры. Курс — 1–3 месяца.",
+    side:"При передозировке: тошнота, слабость, повышение уровня кальция в крови." },
+  { name:"Метопролол 50мг", cat:"Сердечные", price:"67 ₼", avail:"yes", availText:"В наличии",
+    desc:"Кардиоселективный бета-адреноблокатор для лечения сердечно-сосудистых заболеваний.", maker:"AstraZeneca", form:"Таблетки", rx:true,
+    indications:"Артериальная гипертензия, стенокардия, хроническая сердечная недостаточность, аритмии.",
+    contra:"Кардиогенный шок, АВ-блокада II–III степени, синдром слабости синусового узла.",
+    dosage:"50–100 мг 1–2 раза в сутки. Дозу подбирает врач индивидуально.",
+    side:"Брадикардия, утомляемость, холодные конечности, редко — бронхоспазм." },
+  { name:"Цетиризин 10мг", cat:"Антигистаминные", price:"19 ₼", avail:"yes", availText:"В наличии",
+    desc:"Антигистаминное средство II поколения с выраженным противоаллергическим действием.", maker:"UCB Pharma", form:"Таблетки", rx:false,
+    indications:"Сезонный и круглогодичный аллергический ринит, крапивница, атопический дерматит.",
+    contra:"Тяжёлая почечная недостаточность, повышенная чувствительность к гидроксизину.",
+    dosage:"10 мг 1 раз в сутки (вечером). При почечной недостаточности — 5 мг.",
+    side:"Лёгкая сонливость, сухость во рту, головная боль — редко." },
+  { name:"Аскорбиновая кислота 500мг", cat:"Витамины", price:"15 ₼", avail:"yes", availText:"В наличии",
+    desc:"Витамин С — мощный антиоксидант, укрепляет иммунитет и сосуды.", maker:"Pharmstandard", form:"Таблетки", rx:false,
+    indications:"Гиповитаминоз С, профилактика ОРВИ, повышенные физические нагрузки, реконвалесценция.",
+    contra:"Мочекаменная болезнь, тромбофлебит, повышенная чувствительность.",
+    dosage:"0.5–1 г в сутки во время или после еды. Профилактически — 250 мг.",
+    side:"При высоких дозах: изжога, тошнота, образование оксалатных камней." },
+  { name:"Азитромицин 500мг", cat:"Антибиотики", price:"110 ₼", avail:"no", availText:"Нет в наличии",
+    desc:"Антибиотик-макролид с длительным действием — 1 раз в день, курс 3–5 дней.", maker:"Pfizer", form:"Таблетки", rx:true,
+    indications:"Инфекции дыхательных путей, ЛОР-органов, кожи, хламидиоз, гонорея.",
+    contra:"Аллергия на макролиды, тяжёлая печёночная недостаточность.",
+    dosage:"500 мг 1 раз в сутки за 1 час до или через 2 часа после еды, 3–5 дней.",
+    side:"Тошнота, диарея, боли в животе, редко — аллергические реакции." },
+  { name:"Эналаприл 10мг", cat:"Сердечные", price:"48 ₼", avail:"yes", availText:"В наличии",
+    desc:"Ингибитор АПФ для лечения артериальной гипертензии и сердечной недостаточности.", maker:"Berlin-Chemie", form:"Таблетки", rx:true,
+    indications:"Артериальная гипертензия, хроническая сердечная недостаточность, диабетическая нефропатия.",
+    contra:"Ангионевротический отёк в анамнезе, беременность, повышенная чувствительность к ингибиторам АПФ.",
+    dosage:"Начальная доза — 5 мг 1 раз в сутки, поддерживающая — 10–20 мг.",
+    side:"Сухой кашель, гипотензия, гиперкалиемия, редко — ангионевротический отёк." },
+  { name:"Пантопразол 40мг", cat:"Желудочные", price:"75 ₼", avail:"few", availText:"Мало",
+    desc:"Ингибитор протонного насоса последнего поколения с высокой биодоступностью.", maker:"Nycomed", form:"Таблетки", rx:false,
+    indications:"Язва желудка и ДПК, ГЭРБ, эрадикация H. pylori в составе комплексной терапии.",
+    contra:"Совместный приём с атазанавиром, нелфинавиром.",
+    dosage:"40 мг 1 раз в сутки утром до еды, курс 4–8 недель.",
+    side:"Головная боль, диарея, тошнота — редко." },
+];
+
+const pharmacies = [
+  { name:"Аптека №1 «Здоровье»", addr:"ул. Низами, 42, Баку", phone:"+994 12 493-10-22", hours:"08:00–22:00", open:true, rating:"4.8 ⭐", drugs:156, x:"25%", y:"35%" },
+  { name:"Эксклюзив Фарма", addr:"пр. Азадлыг, 15, Баку", phone:"+994 12 562-44-18", hours:"09:00–21:00", open:true, rating:"4.6 ⭐", drugs:203, x:"55%", y:"25%" },
+  { name:"Аптека «Шифа»", addr:"ул. Рашида Бейбутова, 8", phone:"+994 12 498-77-33", hours:"Круглосуточно", open:true, rating:"4.9 ⭐", drugs:312, x:"40%", y:"55%" },
+  { name:"Фарм-Сити", addr:"ул. Самеда Вургуна, 101", phone:"+994 12 441-25-60", hours:"08:00–20:00", open:false, rating:"4.3 ⭐", drugs:89, x:"70%", y:"45%" },
+  { name:"АптекаПлюс Центр", addr:"пл. Фонтанов, 3, Баку", phone:"+994 12 505-90-14", hours:"08:00–23:00", open:true, rating:"4.7 ⭐", drugs:278, x:"20%", y:"65%" },
+  { name:"ФармаМед", addr:"ул. Ататюрк, 77, Баку", phone:"+994 12 447-38-91", hours:"09:00–21:00", open:true, rating:"4.5 ⭐", drugs:134, x:"75%", y:"65%" },
+];
+
+const faqs = [
+  { q:"Как найти нужный препарат в базе?", a:"Перейдите на страницу «Каталог» и введите название препарата, действующее вещество или симптом в строку поиска. Также можно воспользоваться фильтрами по категориям." },
+  { q:"Насколько актуальна информация о наличии препаратов?", a:"Информация о наличии обновляется несколько раз в сутки на основе данных, предоставляемых аптеками-партнёрами. Рекомендуем уточнять наличие по телефону перед визитом." },
+  { q:"Можно ли заказать лекарства онлайн?", a:"В настоящее время система является информационно-справочной. Вы можете найти препарат и адрес аптеки, где он есть в наличии, но оформление заказа производится непосредственно в аптеке." },
+  { q:"Что делать, если нужного препарата нет в базе?", a:"Воспользуйтесь формой обратной связи на странице «Информация», выбрав тему «Нет нужного препарата в базе». Мы добавим его в ближайшие 24–48 часов." },
+  { q:"Как добавить свою аптеку в систему?", a:"Отправьте заявку через форму обратной связи, выбрав тему «Добавление аптеки». Приложите документы о регистрации аптеки, и наш менеджер свяжется с вами в течение 2 рабочих дней." },
+];
+
+// ========== STATE ==========
+let currentCategory = 'Все';
+let selectedPharm = null;
+
+// ========== NAVIGATION ==========
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.getElementById('nav-' + page)?.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ========== DRUGS ==========
+function renderDrugs(list) {
+  const grid = document.getElementById('drugsGrid');
+  if (!list.length) { grid.innerHTML = '<p style="padding:40px;color:var(--text3);">Ничего не найдено. Попробуйте другой запрос.</p>'; return; }
+  grid.innerHTML = list.map((d, i) => `
+    <div class="drug-card" onclick="openDrug(${drugs.indexOf(d)})">
+      <div class="drug-card-top">
+        <div class="drug-name">${d.name}${d.rx ? ' <span style="font-size:.72rem;color:#dc2626;background:#fee2e2;padding:2px 8px;border-radius:6px;font-weight:600;">Rx</span>' : ''}</div>
+        <div class="drug-category">${d.cat}</div>
+      </div>
+      <div class="drug-desc">${d.desc}</div>
+      <div class="drug-card-bottom">
+        <div class="drug-price-big">${d.price}</div>
+        <div class="avail-badge ${d.avail}">${d.availText}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterDrugs() {
+  const q = document.getElementById('drugSearch').value.toLowerCase();
+  let list = drugs;
+  if (currentCategory !== 'Все') list = list.filter(d => d.cat === currentCategory);
+  if (q) list = list.filter(d => d.name.toLowerCase().includes(q) || d.desc.toLowerCase().includes(q) || d.cat.toLowerCase().includes(q));
+  renderDrugs(list);
+}
+
+function setCategory(el, cat) {
+  document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  currentCategory = cat;
+  filterDrugs();
+}
+
+function openDrug(i) {
+  const d = drugs[i];
+  document.getElementById('modal').innerHTML = `
+    <button class="modal-close" onclick="document.getElementById('modalOverlay').classList.remove('open')">✕</button>
+    <div class="modal-drug-name">${d.name}</div>
+    <div class="modal-cat">${d.cat} · ${d.form} · ${d.rx ? '🔒 По рецепту' : '✅ Без рецепта'}</div>
+    <div class="modal-section-title">Описание</div>
+    <div class="modal-text">${d.desc}</div>
+    <div class="modal-props">
+      <div class="modal-prop"><div class="modal-prop-label">ПРОИЗВОДИТЕЛЬ</div><div class="modal-prop-value">${d.maker}</div></div>
+      <div class="modal-prop"><div class="modal-prop-label">ФОРМА ВЫПУСКА</div><div class="modal-prop-value">${d.form}</div></div>
+    </div>
+    <div class="modal-section-title">Показания</div>
+    <div class="modal-text">${d.indications}</div>
+    <div class="modal-section-title">Противопоказания</div>
+    <div class="modal-text">${d.contra}</div>
+    <div class="modal-section-title">Дозировка</div>
+    <div class="modal-text">${d.dosage}</div>
+    <div class="modal-section-title">Побочные эффекты</div>
+    <div class="modal-text">${d.side}</div>
+    <div class="modal-price-section">
+      <div>
+        <div style="font-size:.78rem;color:var(--text3);font-weight:600;margin-bottom:4px;">ЦЕНА</div>
+        <div class="modal-price">${d.price}</div>
+      </div>
+      <div class="modal-avail" style="color:${d.avail==='yes'?'#065f46':d.avail==='few'?'#92400e':'#991b1b'}">${d.availText}</div>
+    </div>
+    <div style="font-size:.78rem;color:var(--text3);margin-top:14px;line-height:1.6;">⚠️ Информация носит справочный характер. Перед применением проконсультируйтесь с врачом или фармацевтом.</div>
+  `;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modalOverlay')) document.getElementById('modalOverlay').classList.remove('open');
+}
+
+// ========== PHARMACIES ==========
+function renderPharms(list) {
+  const container = document.getElementById('pharmList');
+  container.innerHTML = list.map((p, i) => `
+    <div class="pharm-card${selectedPharm===i?' selected':''}" onclick="selectPharm(${pharmacies.indexOf(p)})">
+      <div class="pharm-card-name">${p.name}</div>
+      <div class="pharm-card-addr">📍 ${p.addr}</div>
+      <div class="pharm-card-meta">
+        <span class="${p.open?'open-badge':'closed-badge'}">${p.open?'Открыто':'Закрыто'}</span>
+        <span class="pharm-rating">${p.rating}</span>
+        <span style="font-size:.78rem;color:var(--text3)">${p.drugs} позиций</span>
+      </div>
+    </div>
+  `).join('');
+
+  // pins
+  const pins = document.getElementById('mapPins');
+  pins.innerHTML = list.map(p => `<div class="map-pin" style="left:${p.x};top:${p.y};" onclick="selectPharm(${pharmacies.indexOf(p)})" title="${p.name}">📍</div>`).join('');
+}
+
+function selectPharm(i) {
+  selectedPharm = i;
+  const p = pharmacies[i];
+  const detail = document.getElementById('pharmDetail');
+  detail.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;">
+      <div class="pharm-detail-name">${p.name}</div>
+      <button onclick="document.getElementById('pharmDetail').classList.remove('visible')" style="background:none;border:none;cursor:pointer;font-size:1rem;color:var(--text3)">✕</button>
+    </div>
+    <div class="pharm-detail-addr">📍 ${p.addr}</div>
+    <div class="pharm-detail-row"><span class="pharm-detail-label">Статус</span><span class="pharm-detail-value" style="color:${p.open?'#065f46':'#991b1b'}">${p.open?'Открыто':'Закрыто'}</span></div>
+    <div class="pharm-detail-row"><span class="pharm-detail-label">Часы работы</span><span class="pharm-detail-value">${p.hours}</span></div>
+    <div class="pharm-detail-row"><span class="pharm-detail-label">Телефон</span><span class="pharm-detail-value">${p.phone}</span></div>
+    <div class="pharm-detail-row"><span class="pharm-detail-label">Рейтинг</span><span class="pharm-detail-value">${p.rating}</span></div>
+    <div class="pharm-detail-row"><span class="pharm-detail-label">Ассортимент</span><span class="pharm-detail-value">${p.drugs} позиций</span></div>
+  `;
+  detail.classList.add('visible');
+  renderPharms(pharmacies);
+}
+
+function filterPharms(q) {
+  q = q.toLowerCase();
+  const list = q ? pharmacies.filter(p => p.name.toLowerCase().includes(q) || p.addr.toLowerCase().includes(q)) : pharmacies;
+  renderPharms(list);
+}
+
+// ========== FAQ ==========
+function renderFaq() {
+  document.getElementById('faqList').innerHTML = faqs.map((f, i) => `
+    <div class="faq-item" id="faq${i}">
+      <div class="faq-question" onclick="toggleFaq(${i})">
+        <span>${f.q}</span>
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-answer"><div class="faq-answer-inner">${f.a}</div></div>
+    </div>
+  `).join('');
+}
+
+function toggleFaq(i) {
+  const item = document.getElementById('faq'+i);
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(f => f.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+// ========== FORM ==========
+function submitForm() {
+  const toast = document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3500);
+}
+
+// ========== SCROLL ==========
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10);
+});
+
+// ========== INIT ==========
+renderDrugs(drugs);
+renderPharms(pharmacies);
+renderFaq();
+</script>
+</body>
+</html>
